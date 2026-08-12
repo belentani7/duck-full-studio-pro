@@ -6,12 +6,14 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import DuckOriginalHTML from "./pages/DuckOriginalHTML";
+import DuckMegaHTML from "./pages/DuckMegaHTML";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path={"/"} component={DuckOriginalHTML} />
+      <Route path={"/"} component={DuckMegaHTML} />
+      <Route path={"/original"} component={DuckOriginalHTML} />
       <Route path={"/react"} component={Home} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
