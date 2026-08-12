@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import DuckOriginalHTML from "./pages/DuckOriginalHTML";
 import DuckMegaHTML from "./pages/DuckMegaHTML";
+import DuckAuditStudio from "./pages/DuckAuditStudio";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -14,6 +15,7 @@ function Router() {
     <Switch>
       <Route path={"/"} component={DuckMegaHTML} />
       <Route path={"/original"} component={DuckOriginalHTML} />
+      <Route path={"/audit"} component={DuckAuditStudio} />
       <Route path={"/react"} component={Home} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}

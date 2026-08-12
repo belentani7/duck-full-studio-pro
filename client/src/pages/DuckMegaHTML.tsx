@@ -20,6 +20,9 @@ export default function DuckMegaHTML() {
           <a href="/duck-assets/duck-mega.html" target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-white transition-colors">
             <ExternalLink className="w-3.5 h-3.5" /> Pantalla Completa
           </a>
+          <a href="/audit" className="flex items-center gap-1 text-emerald-300 hover:text-white transition-colors bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/30">
+            Audit Studio
+          </a>
           {!isAuthenticated ? (
             <Button onClick={() => startLogin()} size="sm" className="h-7 bg-emerald-500 text-black hover:bg-emerald-400 font-mono text-[11px]">
               Login Duck
