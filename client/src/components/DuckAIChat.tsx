@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,23 +7,34 @@ import { Streamdown } from "streamdown";
 import { Lang } from "@/lib/i18n";
 
 interface DuckAIChatProps {
-  language: Lang;
+  language?: Lang;
 }
 
-export function DuckAIChat({ language }: DuckAIChatProps) {
+export function DuckAIChat({ language = "pt" }: DuckAIChatProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Array<{ role: "user" | "assistant"; content: string }>>([
     {
       role: "assistant",
       content: language === "pt"
-        ? "E aí! Sou o assistente de IA do Duck (Duck4x). Como posso te ajudar hoje sobre os beats, mixagem ou agendamento?"
+        ? "Quack! E aí, Duck! Sou o DUCK CoLab, seu assistente de produção no estúdio. Como posso destravar seus beats, mix ou stems hoje?"
         : language === "es"
-        ? "¡Qué tal! Soy el asistente de IA de Duck (Duck4x). ¿Cómo te puedo ayudar hoy con los beats, mezcla o agendamiento?"
-        : "Hey! I'm Duck's AI assistant. How can I help you today with beats, mixing, or booking?",
+        ? "¡Quack! ¡Qué tal! Soy DUCK CoLab, tu asistente de producción. ¿Cómo te puedo ayudar hoy con los beats, mezcla o agendamiento?"
+        : "Quack! Hey! I'm DUCK CoLab, your studio assistant. How can I help you today with beats, mixing, or booking?",
     },
   ]);
   const [input, setInput] = useState("");
   const chatMutation = trpc.duck.aiChat.useMutation();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      scrollToBottom();
+    }
+  }, [messages, isOpen]);
 
   const handleSend = async () => {
     if (!input.trim() || chatMutation.isPending) return;
@@ -35,69 +46,93 @@ export function DuckAIChat({ language }: DuckAIChatProps) {
     try {
       const res = await chatMutation.mutateAsync({
         message: userText,
-        language,
+        language: language || "pt",
         history: newMessages.slice(0, -1).map(m => ({ role: m.role, content: m.content })),
       });
       setMessages([...newMessages, { role: "assistant", content: res.reply }]);
     } catch (e) {
-      setMessages([...newMessages, { role: "assistant", content: "Ops, tive um pequeno soluço no estúdio. Tente de novo!" }]);
+      setMessages([...newMessages, { role: "assistant", content: "Quack! Ops, tive um pequeno soluço no estúdio. Tente de novo!" }]);
     }
   };
 
   return (
     <div className="fixed bottom-6 right-6 z-50">
       {!isOpen && (
-        <Button
+        <button
           onClick={() => setIsOpen(true)}
-          className="rounded-full w-14 h-14 bg-accent text-[#07130b] shadow-2xl hover:scale-105 transition-transform flex items-center justify-center border border-white/20"
-          aria-label="Open AI Chat"
+          className="group relative bg-[#00ff66] text-black p-3.5 rounded-full shadow-2xl hover:bg-[#00e65c] transition-all transform hover:scale-105 flex items-center gap-3 border-2 border-black"
+          aria-label="Abrir DUCK CoLab"
         >
-          <Bot className="w-7 h-7" />
-          <span className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-ping" />
-        </Button>
+          <div className="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center overflow-hidden border border-black/20">
+            <img 
+              src="/manus-storage/duck_agent_avatar_c5b3621a.png" 
+              alt="DUCK CoLab Mascot" 
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+            />
+          </div>
+          <span className="font-mono text-xs font-bold pr-2 hidden sm:inline text-black">DUCK CoLab</span>
+          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-700 border-2 border-black rounded-full animate-ping" />
+          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-emerald-600 border-2 border-black rounded-full" />
+        </button>
       )}
 
       {isOpen && (
-        <div className="w-[360px] sm:w-[400px] h-[520px] bg-card border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl">
-          <div className="bg-surface2 px-4 py-3 border-b border-border flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-accent animate-pulse" />
-              <span className="font-unbounded font-bold text-sm">Duck AI Studio</span>
+        <div className="w-[360px] sm:w-[410px] h-[540px] bg-[#070e07] border border-[#152615] rounded-3xl shadow-2xl flex flex-col overflow-hidden backdrop-blur-xl">
+          <div className="bg-[#0b1c0d] px-5 py-4 border-b border-[#152615] flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-[#00ff66]/20 border border-[#00ff66]/40 flex items-center justify-center overflow-hidden">
+                <img 
+                  src="/manus-storage/duck_agent_avatar_c5b3621a.png" 
+                  alt="DUCK Mascot" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div>
+                <h4 className="font-bold text-xs text-white uppercase tracking-wider font-mono flex items-center gap-1.5">
+                  DUCK CoLab <span className="w-2 h-2 rounded-full bg-[#00ff66] animate-pulse" />
+                </h4>
+                <p className="text-[10px] font-mono text-[#00ff66]">Assistente de Estúdio & IA</p>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <a
                 href="https://wa.me/5579996026590"
                 target="_blank"
                 rel="noreferrer"
-                className="text-emerald-400 hover:text-emerald-300 p-1"
+                className="text-emerald-400 hover:text-emerald-300 p-1.5 rounded-lg hover:bg-black/40 transition-colors"
                 title="WhatsApp Direct"
               >
                 <Phone className="w-4 h-4" />
               </a>
               <a
                 href="mailto:duck-beats@hotmail.com"
-                className="text-accent hover:text-accent2 p-1"
+                className="text-[#00ff66] hover:text-emerald-300 p-1.5 rounded-lg hover:bg-black/40 transition-colors"
                 title="Email Direct"
               >
                 <Mail className="w-4 h-4" />
               </a>
-              <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="h-8 w-8 text-dim hover:text-foreground">
+              <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="h-8 w-8 text-zinc-400 hover:text-white">
                 <X className="w-4 h-4" />
               </Button>
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-3 font-manje text-sm">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 font-mono text-xs">
             {messages.map((m, i) => (
               <div
                 key={i}
-                className={`flex flex-col ${m.role === "user" ? "items-end" : "items-start"}`}
+                className={`flex gap-3 ${m.role === "user" ? "justify-end" : "justify-start"}`}
               >
+                {m.role === "assistant" && (
+                  <div className="w-7 h-7 rounded-lg bg-[#00ff66]/20 border border-[#00ff66]/40 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    <img src="/manus-storage/duck_agent_avatar_c5b3621a.png" alt="Duck" className="w-full h-full object-cover" />
+                  </div>
+                )}
                 <div
-                  className={`max-w-[85%] p-3 rounded-xl text-xs sm:text-sm leading-relaxed ${
+                  className={`max-w-[82%] p-3.5 rounded-2xl leading-relaxed ${
                     m.role === "user"
-                      ? "bg-accent text-[#07130b] font-medium rounded-br-none"
-                      : "bg-surface2 text-foreground border border-border rounded-bl-none"
+                      ? "bg-[#00ff66] text-black font-medium rounded-tr-none"
+                      : "bg-[#0b1c0d] text-zinc-200 border border-[#152615] rounded-tl-none"
                   }`}
                 >
                   <Streamdown>{m.content}</Streamdown>
@@ -105,21 +140,22 @@ export function DuckAIChat({ language }: DuckAIChatProps) {
               </div>
             ))}
             {chatMutation.isPending && (
-              <div className="flex items-center gap-2 text-xs text-dim font-mono animate-pulse">
-                <Sparkles className="w-3.5 h-3.5 text-accent" /> Duck afinando frequências y respondiendo...
+              <div className="flex items-center gap-2 text-xs text-emerald-400 font-mono animate-pulse">
+                <Sparkles className="w-3.5 h-3.5" /> DUCK CoLab afinando frequências...
               </div>
             )}
+            <div ref={messagesEndRef} />
           </div>
 
-          <div className="p-3 border-t border-border bg-background/50 flex gap-2">
+          <div className="p-3.5 border-t border-[#152615] bg-[#050805] flex gap-2">
             <Input
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => e.key === "Enter" && handleSend()}
-              placeholder="Escribe tu consulta..."
-              className="bg-surface text-foreground text-xs border-border"
+              placeholder="Digite sua dúvida sobre mix ou beat..."
+              className="bg-[#0b1c0d] text-white text-xs border-[#152615] focus:border-[#00ff66] font-mono"
             />
-            <Button onClick={handleSend} disabled={chatMutation.isPending} size="icon" className="bg-accent text-[#07130b] hover:bg-accent2">
+            <Button onClick={handleSend} disabled={chatMutation.isPending} size="icon" className="bg-[#00ff66] text-black hover:bg-[#00e65c] rounded-xl">
               <Send className="w-4 h-4" />
             </Button>
           </div>

@@ -36,11 +36,11 @@ export default function DuckFullStudioPro() {
 
   return (
     <div className="min-h-screen bg-[#050805] text-[#e2ede2] font-sans selection:bg-[#00ff66] selection:text-black">
-      {/* Top App Bar - Unified Palette */}
+      {/* Top App Bar */}
       <header className="sticky top-0 z-50 bg-[#050805]/95 backdrop-blur-xl border-b border-[#152615] px-6 lg:px-12 py-3.5 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-xl bg-[#00ff66] flex items-center justify-center font-bold text-black font-mono tracking-tighter shadow-lg shadow-[#00ff66]/15">
-            D4X
+          <div className="w-10 h-10 rounded-xl bg-[#00ff66] flex items-center justify-center font-bold text-black font-mono tracking-tighter shadow-lg shadow-[#00ff66]/15 overflow-hidden">
+            <img src="/manus-storage/duck_agent_avatar_c5b3621a.png" alt="Duck Logo" className="w-full h-full object-cover" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -68,15 +68,34 @@ export default function DuckFullStudioPro() {
 
       {/* Main Container */}
       <main className="max-w-7xl mx-auto px-6 lg:px-12 py-10 space-y-8">
+        {/* Mascot Welcome Card */}
+        <div className="bg-[#070e07] border border-[#152615] p-6 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#00ff66]/5 rounded-full blur-3xl pointer-events-none" />
+          <div className="flex items-center gap-5">
+            <div className="w-16 h-16 rounded-2xl bg-[#00ff66]/20 border border-[#00ff66]/40 flex items-center justify-center overflow-hidden flex-shrink-0 shadow-lg shadow-[#00ff66]/10">
+              <img src="/manus-storage/duck_agent_avatar_c5b3621a.png" alt="DUCK CoLab Mascot" className="w-full h-full object-cover scale-110" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 font-mono text-xs text-[#00ff66]">
+                <Sparkles className="w-3.5 h-3.5" /> DUCK CoLab Agent (Online)
+              </div>
+              <h2 className="font-bold text-xl text-white mt-1">E aí, Duck! O estúdio em Aracaju está a todo vapor.</h2>
+              <p className="text-xs text-zinc-400 font-mono mt-1">36M streams na pista · FL Studio sincronizado · Todos os 400 plugins carregados no Vault local.</p>
+            </div>
+          </div>
+          <Button onClick={() => setActiveTab("colab")} className="bg-[#00ff66] text-black hover:bg-[#00e65c] font-mono text-xs font-bold rounded-xl px-6 py-5">
+            Falar com DUCK CoLab
+          </Button>
+        </div>
+
         {activeTab === "dashboard" && (
           <div className="space-y-8 animate-fadeIn">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-2 bg-[#070e07] border border-[#152615] p-8 rounded-3xl space-y-6 shadow-xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-[#00ff66]/5 rounded-full blur-3xl pointer-events-none" />
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2.5">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#00ff66] animate-pulse" />
-                    <span className="font-mono text-xs text-[#00ff66] uppercase tracking-widest font-semibold">SESIÓN ACTIVA FL STUDIO</span>
+                    <span className="font-mono text-xs text-[#00ff66] uppercase tracking-widest font-semibold">SESÃO ATIVA FL STUDIO</span>
                   </div>
                   <span className="bg-[#0b1c0d] text-[#00ff66] font-mono text-xs px-3 py-1 rounded-full border border-[#152615]">
                     {activeProject.status}
@@ -84,7 +103,7 @@ export default function DuckFullStudioPro() {
                 </div>
                 <div>
                   <h1 className="font-bold text-3xl text-white tracking-tight">{activeProject.name}</h1>
-                  <p className="text-xs font-mono text-zinc-400 mt-1.5">Tonalidad: {activeProject.key} · Tempo: {activeProject.bpm} BPM · Productor: Duck (Aracaju)</p>
+                  <p className="text-xs font-mono text-zinc-400 mt-1.5">Tonalidade: {activeProject.key} · Tempo: {activeProject.bpm} BPM · Productor: Duck (Aracaju)</p>
                 </div>
                 <div className="flex flex-wrap items-center gap-4 pt-2">
                   <Button onClick={() => setIsPlaying(!isPlaying)} className="bg-[#00ff66] text-black hover:bg-[#00e65c] font-mono text-xs rounded-2xl px-7 py-6 font-bold shadow-lg shadow-[#00ff66]/20 transition-transform active:scale-95">
@@ -234,12 +253,17 @@ export default function DuckFullStudioPro() {
 
         {activeTab === "colab" && (
           <div className="bg-[#070e07] border border-[#152615] p-8 rounded-3xl space-y-6 shadow-xl animate-fadeIn">
-            <div className="flex justify-between items-center border-b border-[#152615] pb-4">
-              <h3 className="font-bold text-lg text-white">Duck CoLab AI — Asistente Inteligente Híbrido</h3>
-              <span className="text-xs font-mono text-[#00ff66]">Modo Local + API Opcional</span>
+            <div className="flex items-center gap-4 border-b border-[#152615] pb-4">
+              <div className="w-12 h-12 rounded-2xl bg-[#00ff66]/20 border border-[#00ff66]/40 flex items-center justify-center overflow-hidden flex-shrink-0">
+                <img src="/manus-storage/duck_agent_avatar_c5b3621a.png" alt="DUCK Mascot" className="w-full h-full object-cover scale-110" />
+              </div>
+              <div>
+                <h3 className="font-bold text-lg text-white">DUCK CoLab — Assistente de IA do Estúdio</h3>
+                <p className="text-xs font-mono text-[#00ff66]">Treinado em FL Studio, Mixagem, Masterização e Gestão de Stems</p>
+              </div>
             </div>
-            <p className="text-xs text-zinc-400 font-mono leading-relaxed">
-              El asistente inteligente está entrenado en el flujo de trabajo de Duck, mezcla, masterización y estructuración de contratos. Utiliza la burbuja flotante inferior derecha para interactuar en cualquier momento.
+            <p className="text-xs text-zinc-300 font-mono leading-relaxed">
+              O agente CoLab está pronto para responder dúvidas técnicas, sugerir ajustes de equalização e compressores, redigir contratos de beatmaking e organizar prazos de entrega para os artistas. Utilize o chat flutuante no canto inferior direito para conversar a qualquer momento!
             </p>
           </div>
         )}
