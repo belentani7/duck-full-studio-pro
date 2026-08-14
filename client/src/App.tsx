@@ -8,13 +8,15 @@ import Home from "./pages/Home";
 import DuckOriginalHTML from "./pages/DuckOriginalHTML";
 import DuckMegaHTML from "./pages/DuckMegaHTML";
 import DuckStudioModern from "./pages/DuckStudioModern";
+import DuckFullStudioWorkspace from "./pages/DuckFullStudioWorkspace";
 import DuckAuditStudio from "./pages/DuckAuditStudio";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path={"/"} component={DuckStudioModern} />
+      <Route path={"/"} component={DuckFullStudioWorkspace} />
+      <Route path={"/public"} component={DuckStudioModern} />
       <Route path={"/mega"} component={DuckMegaHTML} />
       <Route path={"/original"} component={DuckOriginalHTML} />
       <Route path={"/audit"} component={DuckAuditStudio} />
