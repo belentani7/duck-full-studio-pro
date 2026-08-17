@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { DuckAIChat } from "@/components/DuckAIChat";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Sliders, Disc, FolderArchive, Users, Radio, Cpu, Sparkles, CheckCircle2, Play, Pause, Upload, Shield, HardDrive, FileAudio, Search, Wrench, MessageSquare, Terminal } from "lucide-react";
-import { startLogin } from "@/const";
+import { trpc } from "@/lib/trpc";
+import { Sliders, Disc, FolderArchive, Users, Radio, Cpu, Sparkles, CheckCircle2, Play, Pause, Upload, Shield, HardDrive, FileAudio, Search, Wrench, MessageSquare, Terminal, RefreshCw } from "lucide-react";
 
 export default function DuckFullStudioPro() {
   const { user, isAuthenticated } = useAuth();
@@ -12,27 +12,9 @@ export default function DuckFullStudioPro() {
   const [activeProject, setActiveProject] = useState({ name: "Trap Aracaju 140BPM", bpm: 140, key: "C# Minor", status: "Mixagem & Vocal Tuning" });
   const [searchTerm, setSearchTerm] = useState("");
 
-  const pluginsVault = [
-    { name: "Serum (Xfer Records)", type: "Wavetable Synth", license: "Commercial ($189)", flCompat: "Native VST3 / AU", category: "Synths" },
-    { name: "FabFilter Pro-Q 3", type: "Dynamic Equalizer", license: "Commercial ($179)", flCompat: "Native VST3", category: "Mix & Master" },
-    { name: "Gross Beat (Image-Line)", type: "Time / Pitch Effector", license: "FL Studio Native ($99)", flCompat: "Native FL Plugin", category: "Beatmaking" },
-    { name: "Vital (Audio Damage / Matt Tytel)", type: "Spectral Wavetable", license: "Freemium / Open Source Engine", flCompat: "VST3 / AU", category: "Synths" },
-    { name: "Valhalla VintageVerb", type: "Algorithmic Reverb", license: "Commercial ($50)", flCompat: "Native VST3", category: "Effects" },
-    { name: "Soundtoys Decapitator", type: "Analog Saturation", license: "Commercial ($199)", flCompat: "Native VST3", category: "Mix & Master" },
-    { name: "Omnisphere 2 (Spectrasonics)", type: "Hardware Synth Hybrid", license: "Commercial ($499)", flCompat: "Native VST3", category: "Synths" },
-    { name: "Kilohearts Phase Plant", type: "Modular Synth", license: "Commercial / Subscription", flCompat: "Native VST3", category: "Synths" },
-  ];
-
-  const projects = [
-    { id: 1, name: "Trap Aracaju 140BPM", artist: "Kvyn MC", bpm: 140, key: "C#m", status: "Mixagem", progress: 75 },
-    { id: 2, name: "Pop Summer Hit", artist: "Belentani", bpm: 118, key: "F# Major", status: "Masterização", progress: 90 },
-    { id: 3, name: "Drill Sergipe", artist: "Dlok", bpm: 142, key: "Em", status: "Beatmaking", progress: 40 },
-  ];
-
-  const clients = [
-    { id: 1, name: "Kvyn MC", project: "Trap Aracaju", deadline: "15 Ago 2026", status: "Aguardando Aprovação V2", link: "duckstudio.local/client/kvyn" },
-    { id: 2, name: "Belentani", project: "Pop Summer Hit", deadline: "18 Ago 2026", status: "Stems Enviados", link: "duckstudio.local/client/belen" },
-  ];
+  const { data: projects = [], isLoading: loadingProjects } = trpc.duckStudio.getProjects.useQuery();
+  const { data: clients = [], isLoading: loadingClients } = trpc.duckStudio.getClients.useQuery();
+  const { data: plugins = [], isLoading: loadingPlugins } = trpc.duckStudio.getPlugins.useQuery();
 
   return (
     <div className="min-h-screen bg-[#050805] text-[#e2ede2] font-sans selection:bg-[#00ff66] selection:text-black">
@@ -45,7 +27,7 @@ export default function DuckFullStudioPro() {
           <div>
             <div className="flex items-center gap-2">
               <span className="font-bold text-xs tracking-wider text-white uppercase font-mono">DUCK STUDIO PRO 400</span>
-              <span className="bg-[#0b1c0d] text-[#00ff66] font-mono text-[10px] px-2 py-0.5 rounded border border-[#152615]">LOCAL WORKSPACE</span>
+              <span className="bg-[#0b1c0d] text-[#00ff66] font-mono text-[10px] px-2 py-0.5 rounded border border-[#152615]">FULLSTACK LOCAL</span>
             </div>
             <span className="text-xs font-mono text-zinc-400">FL Studio Flow Sincronizado · {activeProject.name}</span>
           </div>
@@ -103,7 +85,7 @@ export default function DuckFullStudioPro() {
                 </div>
                 <div>
                   <h1 className="font-bold text-3xl text-white tracking-tight">{activeProject.name}</h1>
-                  <p className="text-xs font-mono text-zinc-400 mt-1.5">Tonalidade: {activeProject.key} · Tempo: {activeProject.bpm} BPM · Productor: Duck (Aracaju)</p>
+                  <p className="text-xs font-mono text-zinc-400 mt-1.5">Tonalidad: {activeProject.key} · Tempo: {activeProject.bpm} BPM · Productor: Duck (Aracaju)</p>
                 </div>
                 <div className="flex flex-wrap items-center gap-4 pt-2">
                   <Button onClick={() => setIsPlaying(!isPlaying)} className="bg-[#00ff66] text-black hover:bg-[#00e65c] font-mono text-xs rounded-2xl px-7 py-6 font-bold shadow-lg shadow-[#00ff66]/20 transition-transform active:scale-95">
@@ -139,23 +121,29 @@ export default function DuckFullStudioPro() {
                   + Nuevo Proyecto
                 </Button>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                {projects.map((p) => (
-                  <div key={p.id} onClick={() => setActiveProject(p)} className="p-6 rounded-2xl bg-[#050805] border border-[#152615] hover:border-[#00ff66]/60 cursor-pointer transition-all space-y-4 group">
-                    <div className="flex justify-between items-start">
-                      <span className="font-mono text-xs text-[#00ff66] bg-[#0b1c0d] px-2.5 py-1 rounded-lg border border-[#152615]">{p.key} · {p.bpm} BPM</span>
-                      <span className="text-[10px] font-mono bg-[#0f1c0f] px-2.5 py-1 rounded-lg text-zinc-300">{p.status}</span>
+              {loadingProjects ? (
+                <div className="flex items-center justify-center py-12 text-zinc-400 font-mono text-xs">
+                  <RefreshCw className="w-4 h-4 animate-spin mr-2 text-[#00ff66]" /> Carregando projetos do banco local...
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  {projects.map((p: any) => (
+                    <div key={p.id} onClick={() => setActiveProject(p)} className="p-6 rounded-2xl bg-[#050805] border border-[#152615] hover:border-[#00ff66]/60 cursor-pointer transition-all space-y-4 group">
+                      <div className="flex justify-between items-start">
+                        <span className="font-mono text-xs text-[#00ff66] bg-[#0b1c0d] px-2.5 py-1 rounded-lg border border-[#152615]">{p.key} · {p.bpm} BPM</span>
+                        <span className="text-[10px] font-mono bg-[#0f1c0f] px-2.5 py-1 rounded-lg text-zinc-300">{p.status}</span>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-base text-white group-hover:text-[#00ff66] transition-colors">{p.name}</h4>
+                        <p className="text-xs text-zinc-400 mt-1">Artista: {p.artist}</p>
+                      </div>
+                      <div className="w-full bg-[#081208] rounded-full h-2 overflow-hidden border border-[#152615]">
+                        <div className="bg-[#00ff66] h-full rounded-full transition-all" style={{ width: `${p.progress}%` }} />
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-bold text-base text-white group-hover:text-[#00ff66] transition-colors">{p.name}</h4>
-                      <p className="text-xs text-zinc-400 mt-1">Artista: {p.artist}</p>
-                    </div>
-                    <div className="w-full bg-[#081208] rounded-full h-2 overflow-hidden border border-[#152615]">
-                      <div className="bg-[#00ff66] h-full rounded-full transition-all" style={{ width: `${p.progress}%` }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -166,26 +154,33 @@ export default function DuckFullStudioPro() {
               <h3 className="font-bold text-lg text-white">Plataforma de Clientes — Portal Inteligente</h3>
               <span className="text-xs font-mono text-[#00ff66]">Control de Stems y Aprobaciones con Comentarios</span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {clients.map((c) => (
-                <div key={c.id} className="p-6 rounded-2xl bg-[#050805] border border-[#152615] space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="font-mono text-xs text-[#00ff66]">Prazo: {c.deadline}</span>
-                    <span className="text-[10px] font-mono bg-[#0b1c0d] text-[#00ff66] px-3 py-1 rounded-full border border-[#152615]">{c.status}</span>
+            {loadingClients ? (
+              <div className="flex items-center justify-center py-12 text-zinc-400 font-mono text-xs">
+                <RefreshCw className="w-4 h-4 animate-spin mr-2 text-[#00ff66]" /> Carregando portal de clientes...
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {clients.map((c: any) => (
+                  <div key={c.id} className="p-6 rounded-2xl bg-[#050805] border border-[#152615] space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="font-mono text-xs text-[#00ff66]">Prazo: {c.deadline}</span>
+                      <span className="text-[10px] font-mono bg-[#0b1c0d] text-[#00ff66] px-3 py-1 rounded-full border border-[#152615]">{c.status}</span>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-lg text-white">{c.name}</h4>
+                      <p className="text-xs text-zinc-400 mt-0.5">Proyecto: {c.project}</p>
+                      <p className="text-xs text-zinc-500 font-mono mt-2 bg-black/40 p-2.5 rounded-xl border border-[#152615]">{c.notes}</p>
+                    </div>
+                    <div className="pt-3 border-t border-[#152615] flex justify-between items-center">
+                      <span className="font-mono text-xs text-zinc-500">{c.link}</span>
+                      <Button size="sm" variant="outline" className="border-[#152615] bg-[#050805] text-[#00ff66] font-mono text-xs hover:bg-[#0f1c0f] rounded-xl">
+                        Copiar Enlace
+                      </Button>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-bold text-lg text-white">{c.name}</h4>
-                    <p className="text-xs text-zinc-400 mt-0.5">Proyecto: {c.project}</p>
-                  </div>
-                  <div className="pt-3 border-t border-[#152615] flex justify-between items-center">
-                    <span className="font-mono text-xs text-zinc-500">{c.link}</span>
-                    <Button size="sm" variant="outline" className="border-[#152615] bg-[#050805] text-[#00ff66] font-mono text-xs hover:bg-[#0f1c0f] rounded-xl">
-                      Copiar Enlace
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -193,7 +188,7 @@ export default function DuckFullStudioPro() {
           <div className="bg-[#070e07] border border-[#152615] p-8 rounded-3xl space-y-6 shadow-xl animate-fadeIn">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-[#152615] pb-4 gap-4">
               <div>
-                <h3 className="font-bold text-lg text-white">Vault de 400 Plugins y Herramientas (FL Studio)</h3>
+                <h3 className="font-bold text-lg text-white">Vault de Plugins y Herramientas (FL Studio)</h3>
                 <p className="text-xs font-mono text-zinc-400 mt-1">Clasificación legal de plugins de alta gama, sintes y efectos con compatibilidad nativa.</p>
               </div>
               <div className="relative w-full md:w-72">
@@ -207,24 +202,30 @@ export default function DuckFullStudioPro() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {pluginsVault.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()) || p.category.toLowerCase().includes(searchTerm.toLowerCase())).map((p, i) => (
-                <div key={i} className="p-5 rounded-2xl bg-[#050805] border border-[#152615] space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="font-mono text-[10px] bg-[#0b1c0d] text-[#00ff66] px-2.5 py-0.5 rounded border border-[#152615]">{p.category}</span>
-                    <span className="text-[10px] font-mono text-zinc-400">{p.flCompat}</span>
+            {loadingPlugins ? (
+              <div className="flex items-center justify-center py-12 text-zinc-400 font-mono text-xs">
+                <RefreshCw className="w-4 h-4 animate-spin mr-2 text-[#00ff66]" /> Carregando Vault de plugins...
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {plugins.filter((p: any) => p.name.toLowerCase().includes(searchTerm.toLowerCase()) || p.category.toLowerCase().includes(searchTerm.toLowerCase())).map((p: any, i: number) => (
+                  <div key={i} className="p-5 rounded-2xl bg-[#050805] border border-[#152615] space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="font-mono text-[10px] bg-[#0b1c0d] text-[#00ff66] px-2.5 py-0.5 rounded border border-[#152615]">{p.category}</span>
+                      <span className="text-[10px] font-mono text-zinc-400">{p.flCompat}</span>
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-sm text-white">{p.name}</h4>
+                      <p className="text-xs text-zinc-400 mt-0.5">{p.type}</p>
+                    </div>
+                    <div className="pt-2 border-t border-[#152615] flex justify-between items-center text-[11px] font-mono">
+                      <span className="text-[#00ff66]">{p.license}</span>
+                      <span className="text-zinc-500">★ {p.rating}.0</span>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-bold text-sm text-white">{p.name}</h4>
-                    <p className="text-xs text-zinc-400 mt-0.5">{p.type}</p>
-                  </div>
-                  <div className="pt-2 border-t border-[#152615] flex justify-between items-center text-[11px] font-mono">
-                    <span className="text-[#00ff66]">{p.license}</span>
-                    <span className="text-zinc-500">Verificado</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
