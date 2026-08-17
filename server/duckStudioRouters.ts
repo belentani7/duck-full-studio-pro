@@ -32,16 +32,19 @@ export const duckStudioRouter = router({
     const categories = ["Synths", "Mix & Master", "Beatmaking", "Effects", "Dynamics", "Meters", "Restoration"];
     const licenses = ["Commercial ($149)", "Commercial ($199)", "FL Studio Native ($99)", "Freemium / Open Source", "Commercial ($299)", "Subscription"];
     const basePlugins = [
+      { name: "butterDAWg (FL Studio 20 Clone)", type: "Open Source DAW Companion", cat: "DAW Tools", lic: "Open Source (GPL)", url: "https://github.com/jaybee18/butterdawg" },
+      { name: "flskinner (Theme Applier)", type: "UI Theme Skinner", cat: "Customization", lic: "Open Source (MIT)", url: "https://github.com/erikbwu/flskinner" },
+      { name: "FL Studio Automatic Plugin Organizer", type: "Manufacturer Sorter", cat: "Workflow", lic: "Open Source (MIT)", url: "https://github.com/Koros1691/FL-Studio-Automatic-Plugin-Organizer" },
+      { name: "FL-PluginDB-Organiser", type: "Database Manager", cat: "Workflow", lic: "Open Source (MIT)", url: "https://github.com/demberto/FL-PluginDB-Organiser" },
+      { name: "FL-Custom-Intonation", type: "Microtonal Patcher Preset", cat: "Presets", lic: "Open Source", url: "https://github.com/Windows81/FL-Custom-Intonation" },
+      { name: "FL-Studio-Presets", type: "Patcher Sound Design", cat: "Presets", lic: "Open Source", url: "https://github.com/MysteryPancake/FL-Studio-Presets" },
+      { name: "crossfadelimiter", type: "Patcher Utility Preset", cat: "Presets", lic: "Open Source", url: "https://github.com/kisoqual/crossfadelimiter" },
+      { name: "proxima", type: "Patcher Effect Preset", cat: "Presets", lic: "Open Source", url: "https://github.com/kisoqual/proxima" },
       { name: "Serum (Xfer Records)", type: "Wavetable Synth", cat: "Synths", lic: "Commercial ($189)" },
       { name: "FabFilter Pro-Q 3", type: "Dynamic Equalizer", cat: "Mix & Master", lic: "Commercial ($179)" },
       { name: "Gross Beat (Image-Line)", type: "Time / Pitch Effector", cat: "Beatmaking", lic: "FL Studio Native ($99)" },
       { name: "Vital (Matt Tytel)", type: "Spectral Wavetable", cat: "Synths", lic: "Freemium / Open Source" },
       { name: "Valhalla VintageVerb", type: "Algorithmic Reverb", cat: "Effects", lic: "Commercial ($50)" },
-      { name: "Soundtoys Decapitator", type: "Analog Saturation", cat: "Mix & Master", lic: "Commercial ($199)" },
-      { name: "Omnisphere 2", type: "Hardware Synth Hybrid", cat: "Synths", lic: "Commercial ($499)" },
-      { name: "Kilohearts Phase Plant", type: "Modular Synth", cat: "Synths", lic: "Commercial / Sub" },
-      { name: "Auto-Tune Pro (Antares)", type: "Pitch Correction", cat: "Mix & Master", lic: "Commercial ($399)" },
-      { name: "Melodyne 5 Studio", type: "Vocal Tuning & Editing", cat: "Mix & Master", lic: "Commercial ($699)" },
     ];
 
     const fullList = [...basePlugins];
@@ -56,14 +59,15 @@ export const duckStudioRouter = router({
       });
     }
 
-    return fullList.map((p, index) => ({
+    return fullList.map((p: any, index: number) => ({
       id: index + 1,
       name: p.name,
       type: p.type,
       license: p.lic,
       flCompat: "Native VST3 / AU",
       category: p.cat,
-      rating: (index % 2 === 0) ? 5 : 4
+      rating: (index % 2 === 0) ? 5 : 4,
+      url: p.url || null
     }));
   }),
 

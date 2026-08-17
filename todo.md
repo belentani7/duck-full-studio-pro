@@ -35,3 +35,8 @@
 # SHARED PREVIEW DISCLOSURE PASS
 - [x] Dejar explícito que el reproductor usa un único preview local compartido cuando no existe audio local por track y separar ese preview de las referencias externas originales
 - [x] Sincronizar el estado del player con el item seleccionado sin presentar el preview compartido como si fuera el master del track
+
+# GITHUB FL STUDIO TOOLS INTEGRATION
+- [ ] Añadir los repositorios reales de GitHub (butterdawg, flskinner, organizadores, presets) a duckStudioRouters.ts
+- [ ] Mostrar enlaces oficiales directos en la interfaz de Vault Plugins
+- [ ] Verificar pruebas y TypeScript OK

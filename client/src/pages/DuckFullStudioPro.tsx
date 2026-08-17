@@ -209,18 +209,27 @@ export default function DuckFullStudioPro() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {plugins.filter((p: any) => p.name.toLowerCase().includes(searchTerm.toLowerCase()) || p.category.toLowerCase().includes(searchTerm.toLowerCase())).map((p: any, i: number) => (
-                  <div key={i} className="p-5 rounded-2xl bg-[#050805] border border-[#152615] space-y-3">
-                    <div className="flex justify-between items-center">
-                      <span className="font-mono text-[10px] bg-[#0b1c0d] text-[#00ff66] px-2.5 py-0.5 rounded border border-[#152615]">{p.category}</span>
-                      <span className="text-[10px] font-mono text-zinc-400">{p.flCompat}</span>
+                  <div key={i} className="p-5 rounded-2xl bg-[#050805] border border-[#152615] space-y-3 flex flex-col justify-between">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="font-mono text-[10px] bg-[#0b1c0d] text-[#00ff66] px-2.5 py-0.5 rounded border border-[#152615]">{p.category}</span>
+                        <span className="text-[10px] font-mono text-zinc-400">{p.flCompat}</span>
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm text-white">{p.name}</h4>
+                        <p className="text-xs text-zinc-400 mt-0.5">{p.type}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-bold text-sm text-white">{p.name}</h4>
-                      <p className="text-xs text-zinc-400 mt-0.5">{p.type}</p>
-                    </div>
-                    <div className="pt-2 border-t border-[#152615] flex justify-between items-center text-[11px] font-mono">
-                      <span className="text-[#00ff66]">{p.license}</span>
-                      <span className="text-zinc-500">★ {p.rating}.0</span>
+                    <div className="pt-2 border-t border-[#152615] space-y-2">
+                      <div className="flex justify-between items-center text-[11px] font-mono">
+                        <span className="text-[#00ff66]">{p.license}</span>
+                        <span className="text-zinc-500">★ {p.rating}.0</span>
+                      </div>
+                      {p.url && (
+                        <a href={p.url} target="_blank" rel="noopener noreferrer" className="block text-center bg-[#081208] hover:bg-[#0b1c0d] text-[#00ff66] border border-[#152615] text-[10px] font-mono py-1.5 rounded-lg transition-colors">
+                          Ver Repositorio GitHub ↗
+                        </a>
+                      )}
                     </div>
                   </div>
                 ))}
