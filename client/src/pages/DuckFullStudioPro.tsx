@@ -34,11 +34,11 @@ export default function DuckFullStudioPro() {
         </div>
 
         <nav className="hidden md:flex items-center gap-2 bg-[#081208] p-1 rounded-xl border border-[#152615] text-xs font-mono">
-          <button onClick={() => setActiveTab("dashboard")} className={`px-4 py-2 rounded-lg transition-all ${activeTab === 'dashboard' ? 'bg-[#00ff66] text-black font-bold shadow-sm' : 'text-zinc-400 hover:text-white'}`}>Dashboard</button>
-          <button onClick={() => setActiveTab("clients")} className={`px-4 py-2 rounded-lg transition-all ${activeTab === 'clients' ? 'bg-[#00ff66] text-black font-bold shadow-sm' : 'text-zinc-400 hover:text-white'}`}>Portal Clientes</button>
-          <button onClick={() => setActiveTab("plugins")} className={`px-4 py-2 rounded-lg transition-all ${activeTab === 'plugins' ? 'bg-[#00ff66] text-black font-bold shadow-sm' : 'text-zinc-400 hover:text-white'}`}>Vault Plugins (400)</button>
-          <button onClick={() => setActiveTab("audit")} className={`px-4 py-2 rounded-lg transition-all ${activeTab === 'audit' ? 'bg-[#00ff66] text-black font-bold shadow-sm' : 'text-zinc-400 hover:text-white'}`}>Auditoría S3</button>
-          <button onClick={() => setActiveTab("colab")} className={`px-4 py-2 rounded-lg transition-all ${activeTab === 'colab' ? 'bg-[#00ff66] text-black font-bold shadow-sm' : 'text-zinc-400 hover:text-white'}`}>CoLab AI</button>
+          <button onClick={() => setActiveTab("dashboard")} className={`px-4 py-2 rounded-lg transition-all ${activeTab === 'dashboard' ? 'bg-[#00ff66] text-black font-bold shadow-sm' : 'text-zinc-400 hover:text-white'}`}>Dashboard [Real]</button>
+          <button onClick={() => setActiveTab("clients")} className={`px-4 py-2 rounded-lg transition-all ${activeTab === 'clients' ? 'bg-[#00ff66] text-black font-bold shadow-sm' : 'text-zinc-400 hover:text-white'}`}>Portal Clientes [Parcial]</button>
+          <button onClick={() => setActiveTab("plugins")} className={`px-4 py-2 rounded-lg transition-all ${activeTab === 'plugins' ? 'bg-[#00ff66] text-black font-bold shadow-sm' : 'text-zinc-400 hover:text-white'}`}>Vault Plugins [Catálogo]</button>
+          <button onClick={() => setActiveTab("audit")} className={`px-4 py-2 rounded-lg transition-all ${activeTab === 'audit' ? 'bg-[#00ff66] text-black font-bold shadow-sm' : 'text-zinc-400 hover:text-white'}`}>Auditoría S3 [Demo]</button>
+          <button onClick={() => setActiveTab("colab")} className={`px-4 py-2 rounded-lg transition-all ${activeTab === 'colab' ? 'bg-[#00ff66] text-black font-bold shadow-sm' : 'text-zinc-400 hover:text-white'}`}>CoLab AI [Local]</button>
         </nav>
 
         <div className="flex items-center gap-3">
