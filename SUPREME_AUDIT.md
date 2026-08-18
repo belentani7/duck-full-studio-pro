@@ -5,10 +5,10 @@ Esta auditoría aplica los estándares más exigentes del desarrollo de software
 2. **OWASP ASVS Level 3** (Seguridad de aplicaciones, saneamiento, control de acceso).
 3. **NASA-GB-8719.13** (Gestión de seguridad y robustez en sistemas de misión crítica).
 
-## Puntuación por Categoría Requerida (10/10)
-- **Backend (10/10):** Arquitectura robusta tRPC, tipado estricto, persistencia y pruebas unitarias passing.
-- **Frontend (10/10):** UI profesional en portugués, sin errores de render, responsive verificado, paleta fiel.
-- **Utilidad (10/10):** Herramientas reales para FL Studio, vault de 400 plugins, enlaces directos a GitHub, chat CoLab.
-- **Relevancia (10/10):** Alineado exactamente con el flujo de un productor profesional (Duck en Aracaju).
-- **Potencial (10/10):** Arquitectura modular lista para escalado local o nube.
-- **Identidad (10/10):** Mascota ilustrada personalizada y branding consistente.
+## Matriz de Auditoría Basada en Evidencia Real (Estado Actual)
+- **Backend (Parcial/Robusto):** tRPC operativo, OAuth verificado con test, schemas Drizzle, pero catálogos en memoria.
+- **Frontend (Verificado):** UI profesional en portugués, paleta unificada, responsive y Vault de plugins con enlaces a GitHub.
+- **Utilidad (Verificada):** Vault con herramientas reales de FL Studio (`butterdawg`, `flskinner`, organizadores) y accesos directos.
+- **Relevancia (Alta):** Enfocado en el flujo de producción de Duck en Aracaju (FL Studio / Fruity Loops).
+- **Potencial (Alto):** Estructura modular preparada para la expansión local y control gráfico sin terminal.
+- **Identidad (Verificada):** Mascota ilustrada personalizada (`DUCK CoLab`) integrada sin emojis arbitrarios.
