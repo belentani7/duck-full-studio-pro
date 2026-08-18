@@ -51,3 +51,13 @@
 - [x] Realizar una auditoría real y trazable por módulo con evidencia archivo por archivo en SUPREME_AUDIT.md y REALITY_CHECK.md
 - [x] Corregir cualquier afirmación exagerada de 10/10 en la documentación para reflejar el estado real verificado
 - [x] Sincronizar el repositorio privado en GitHub con la versión auditada y honesta
+
+# REAL IMPLEMENTATION PASS (SQL, S3, TIMESTAMP COMMENTS)
+- [ ] Actualizar `drizzle/schema.ts` con tablas `duck_projects`, `duck_stems`, `duck_comments` y `duck_audit_logs`
+- [ ] Aplicar migración SQL mediante `webdev_execute_sql`
+- [ ] Implementar helpers y routers tRPC persistentes en `server/duckStudioRouters.ts` conectados a la BD y S3 (`storagePut`, `storageGet`)
+- [ ] Conectar la interfaz de DuckFullStudioPro.tsx con mutaciones y queries tRPC reales para proyectos, subida de stems y comentarios por timestamp
+- [ ] Añadir pruebas unitarias y verificar TypeScript y Vitest
+- [x] Ejecutar ALTER TABLE en MySQL y resolver ER_BAD_FIELD_ERROR para tracks y projects
+- [x] Verificar pruebas unitarias Vitest exitosas (auth.logout.test.ts y duck.test.ts)
+- [x] Sincronizar todos los cambios al repositorio privado de GitHub

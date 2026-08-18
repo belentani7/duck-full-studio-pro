@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal } from "drizzle-orm/mysql-core";
+import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, float, json } from "drizzle-orm/mysql-core";
 
 export const users = mysqlTable("users", {
   id: int("id").autoincrement().primaryKey(),
@@ -19,14 +19,14 @@ export const tracks = mysqlTable("tracks", {
   id: int("id").autoincrement().primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),
   artist: varchar("artist", { length: 255 }).notNull(),
-  genre: varchar("genre", { length: 64 }).notNull(), // pop, trap, mpb
-  credits: varchar("credits", { length: 255 }).notNull(), // I, Gr, M, MA, Pr
+  genre: varchar("genre", { length: 64 }).notNull(),
+  credits: varchar("credits", { length: 255 }).notNull(),
   bpm: int("bpm"),
   duration: varchar("duration", { length: 32 }),
-  audioUrl: text("audioUrl"),
   coverUrl: text("coverUrl"),
-  isSingle: int("isSingle").default(0).notNull(), // 1 for official single
-  status: varchar("status", { length: 64 }).default("released").notNull(),
+  audioUrl: text("audioUrl"),
+  isFeatured: int("isFeatured").notNull().default(0),
+  isSingle: int("isSingle").notNull().default(0),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
@@ -36,16 +36,17 @@ export type InsertTrack = typeof tracks.$inferInsert;
 export const projects = mysqlTable("projects", {
   id: int("id").autoincrement().primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),
+  name: varchar("name", { length: 255 }),
   clientName: varchar("clientName", { length: 255 }).notNull(),
   clientEmail: varchar("clientEmail", { length: 320 }),
   clientPhone: varchar("clientPhone", { length: 64 }),
   genre: varchar("genre", { length: 64 }).notNull(),
-  status: mysqlEnum("status", ["briefing", "recording", "mixing", "mastering", "delivered"]).default("briefing").notNull(),
-  budget: decimal("budget", { precision: 10, scale: 2 }),
+  status: varchar("status", { length: 64 }).notNull().default("Em Andamento"),
+  bpm: int("bpm").notNull().default(140),
+  key: varchar("key", { length: 32 }).notNull().default("C#m"),
+  budget: varchar("budget", { length: 64 }),
   notes: text("notes"),
-  stemsUrl: text("stemsUrl"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
 
 export type Project = typeof projects.$inferSelect;
@@ -61,3 +62,42 @@ export const auditLogs = mysqlTable("audit_logs", {
 
 export type AuditLog = typeof auditLogs.$inferSelect;
 export type InsertAuditLog = typeof auditLogs.$inferInsert;
+
+export const duckProjects = mysqlTable("duck_projects", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  artist: varchar("artist", { length: 255 }).notNull(),
+  bpm: int("bpm").notNull().default(140),
+  key: varchar("key", { length: 50 }).notNull().default("C# Minor"),
+  genre: varchar("genre", { length: 100 }).notNull().default("Trap"),
+  status: varchar("status", { length: 50 }).notNull().default("Mixagem"),
+  audioUrl: text("audioUrl"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export const duckStems = mysqlTable("duck_stems", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  stemName: varchar("stemName", { length: 255 }).notNull(),
+  fileKey: text("fileKey").notNull(),
+  fileUrl: text("fileUrl").notNull(),
+  fileSize: int("fileSize").notNull().default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export const duckComments = mysqlTable("duck_comments", {
+  id: int("id").autoincrement().primaryKey(),
+  projectId: int("projectId").notNull(),
+  authorName: varchar("authorName", { length: 255 }).notNull(),
+  content: text("content").notNull(),
+  timestampSeconds: float("timestampSeconds").notNull().default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export const duckAuditLogs = mysqlTable("duck_audit_logs", {
+  id: int("id").autoincrement().primaryKey(),
+  action: varchar("action", { length: 255 }).notNull(),
+  details: text("details"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});

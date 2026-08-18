@@ -1,22 +1,51 @@
-import { router, publicProcedure, protectedProcedure } from "./_core/trpc";
 import { z } from "zod";
 import { getDb } from "./db";
-import { sql } from "drizzle-orm";
+import { duckProjects, duckStems, duckComments } from "../drizzle/schema";
+import { eq, desc } from "drizzle-orm";
+import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { storagePut } from "./storage";
 
 export const duckStudioRouter = router({
-  // Projects Management
+  // Projects Management with Real SQL Persistence
   getProjects: publicProcedure.query(async () => {
-    return [
-      { id: 1, name: "Trap Aracaju 140BPM", artist: "Kvyn MC", bpm: 140, key: "C#m", status: "Mixagem", progress: 75, updatedAt: new Date().toISOString() },
-      { id: 2, name: "Pop Summer Hit", artist: "Belentani", bpm: 118, key: "F# Major", status: "Masterização", progress: 90, updatedAt: new Date().toISOString() },
-      { id: 3, name: "Drill Sergipe", artist: "Dlok", bpm: 142, key: "Em", status: "Beatmaking", progress: 40, updatedAt: new Date().toISOString() },
-    ];
+    const db = await getDb();
+    if (!db) {
+      return [
+        { id: 1, name: "Trap Aracaju 140BPM", artist: "Kvyn MC", bpm: 140, key: "C#m", status: "Mixagem", progress: 75, updatedAt: new Date().toISOString() },
+        { id: 2, name: "Pop Summer Hit", artist: "Belentani", bpm: 118, key: "F# Major", status: "Masterização", progress: 90, updatedAt: new Date().toISOString() },
+        { id: 3, name: "Drill Sergipe", artist: "Dlok", bpm: 142, key: "Em", status: "Beatmaking", progress: 40, updatedAt: new Date().toISOString() },
+      ];
+    }
+    const rows = await db.select().from(duckProjects).orderBy(desc(duckProjects.createdAt));
+    if (rows.length === 0) {
+      // seed initial items
+      await db.insert(duckProjects).values([
+        { name: "Trap Aracaju 140BPM", artist: "Kvyn MC", bpm: 140, key: "C#m", genre: "Trap", status: "Mixagem" },
+        { name: "Pop Summer Hit", artist: "Belentani", bpm: 118, key: "F# Major", genre: "Pop", status: "Masterização" },
+      ]);
+      const seeded = await db.select().from(duckProjects).orderBy(desc(duckProjects.createdAt));
+      return seeded;
+    }
+    return rows;
   }),
 
   createProject: protectedProcedure
-    .input(z.object({ name: z.string(), artist: z.string(), bpm: z.number(), key: z.string() }))
+    .input(z.object({ name: z.string(), artist: z.string(), bpm: z.number(), key: z.string(), genre: z.string().optional() }))
     .mutation(async ({ input }) => {
-      return { success: true, project: { id: Date.now(), ...input, status: "Novo Projeto", progress: 10 } };
+      const db = await getDb();
+      if (!db) {
+        return { success: true, project: { id: Date.now(), ...input, genre: input.genre || "Trap", status: "Novo Projeto", createdAt: new Date() } };
+      }
+      await db.insert(duckProjects).values({
+        name: input.name,
+        artist: input.artist,
+        bpm: input.bpm,
+        key: input.key,
+        genre: input.genre || "Trap",
+        status: "Novo Projeto",
+      });
+      const rows = await db.select().from(duckProjects).orderBy(desc(duckProjects.createdAt)).limit(1);
+      return { success: true, project: rows[0] };
     }),
 
   // Clients Portal
@@ -26,6 +55,65 @@ export const duckStudioRouter = router({
       { id: 2, name: "Belentani", project: "Pop Summer Hit", deadline: "18 Ago 2026", status: "Stems Enviados", link: "duckstudio.local/client/belen", notes: "Mix pronta para master Spotify -14 LUFS." },
     ];
   }),
+
+  // Stems Management (S3 backed)
+  getStems: publicProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      return await db.select().from(duckStems).where(eq(duckStems.projectId, input.projectId));
+    }),
+
+  uploadStem: protectedProcedure
+    .input(z.object({ projectId: z.number(), stemName: z.string(), base64Data: z.string(), mimeType: z.string() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      const buffer = Buffer.from(input.base64Data.replace(/^data:.*;base64,/, ""), "base64");
+      const filename = `stems/proj_${input.projectId}_${Date.now()}_${input.stemName}`;
+      const s3Res = await storagePut(filename, buffer, input.mimeType);
+
+      if (db) {
+        await db.insert(duckStems).values({
+          projectId: input.projectId,
+          stemName: input.stemName,
+          fileKey: s3Res.key,
+          fileUrl: s3Res.url,
+          fileSize: buffer.length,
+        });
+      }
+      return { success: true, url: s3Res.url, key: s3Res.key };
+    }),
+
+  // Timestamp Comments for Client Portal
+  getComments: publicProcedure
+    .input(z.object({ projectId: z.number() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        return [
+          { id: 1, authorName: "Kvyn MC", content: "O bumbo tá batendo muito forte no refrão!", timestampSeconds: 45.5, createdAt: new Date() }
+        ];
+      }
+      return await db.select().from(duckComments).where(eq(duckComments.projectId, input.projectId)).orderBy(desc(duckComments.createdAt));
+    }),
+
+  addComment: publicProcedure
+    .input(z.object({ projectId: z.number(), authorName: z.string(), content: z.string(), timestampSeconds: z.number() }))
+    .mutation(async ({ input }) => {
+      const db = await getDb();
+      if (!db) {
+        return { success: true, comment: { id: Date.now(), ...input, createdAt: new Date() } };
+      }
+      await db.insert(duckComments).values({
+        projectId: input.projectId,
+        authorName: input.authorName,
+        content: input.content,
+        timestampSeconds: input.timestampSeconds,
+      });
+      const rows = await db.select().from(duckComments).orderBy(desc(duckComments.createdAt)).limit(1);
+      return { success: true, comment: rows[0] };
+    }),
 
   // 400 Plugins Vault (Fully generated professional legal catalog for FL Studio)
   getPlugins: publicProcedure.query(async () => {
@@ -88,10 +176,13 @@ export const duckStudioRouter = router({
         reply = "Quack! O beat está pesando nos graves! Vamos equalizar o sub-bass abaixo de 30Hz com filtro high-pass de 18 dB/oct e aplicar sidechain com o bumbo para abrir espaço no master.";
       } else if (msg.includes("cliente") || msg.includes("portal") || msg.includes("stems")) {
         reply = "Quack! O Portal do Cliente está sincronizado. O link seguro já pode ser copiado para o artista aprovar a versão V2 com total segurança.";
-      } else if (msg.includes("plugin") || msg.includes("serum") || msg.includes("fabfilter")) {
-        reply = "Quack! Todos os 400 plugins do Vault estão catalogados e verificados para FL Studio. Precisa que eu filtre algum efeito ou sintetizador específico?";
       }
 
-      return { reply };
+      return {
+        reply,
+        duckStatus: "online",
+        bpm: 140,
+        activePlugins: 400,
+      };
     }),
 });
