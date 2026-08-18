@@ -37,6 +37,12 @@
 - [x] Sincronizar el estado del player con el item seleccionado sin presentar el preview compartido como si fuera el master del track
 
 # GITHUB FL STUDIO TOOLS INTEGRATION
-- [ ] Añadir los repositorios reales de GitHub (butterdawg, flskinner, organizadores, presets) a duckStudioRouters.ts
-- [ ] Mostrar enlaces oficiales directos en la interfaz de Vault Plugins
-- [ ] Verificar pruebas y TypeScript OK
+- [x] Añadir los repositorios reales de GitHub (butterdawg, flskinner, organizadores, presets) a duckStudioRouters.ts
+- [x] Mostrar enlaces oficiales directos en la interfaz de Vault Plugins
+- [x] Verificar pruebas y TypeScript OK
+
+# SUPREME AUDIT & GITHUB PRIVATE DEPLOYMENT
+- [ ] Crear la Matriz de Auditoría Suprema (ISO/IEC 25010 + OWASP ASVS + NASA) en SUPREME_AUDIT.md
+- [ ] Verificar que todo el código cumpla con los estándares 10/10 en backend, frontend, utilidad, relevancia, potencial e identidad
+- [ ] Crear un nuevo repositorio privado en GitHub con `gh repo create`
+- [ ] Sincronizar y publicar el código auditado en el nuevo repositorio privado
