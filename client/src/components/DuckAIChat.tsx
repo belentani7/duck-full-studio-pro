@@ -16,14 +16,18 @@ export function DuckAIChat({ language = "pt" }: DuckAIChatProps) {
     {
       role: "assistant",
       content: language === "pt"
-        ? "Quack! E aí, Duck! Sou o DUCK CoLab, seu assistente de produção no estúdio. Como posso destravar seus beats, mix ou stems hoje?"
+        ? "Quack! Sou o DUCK CoLab local. Posso orientar sobre beats, mix, stems e comentários por timestamp. Se eu não tiver certeza, vou dizer isso."
         : language === "es"
-        ? "¡Quack! ¡Qué tal! Soy DUCK CoLab, tu asistente de producción. ¿Cómo te puedo ayudar hoy con los beats, mezcla o agendamiento?"
-        : "Quack! Hey! I'm DUCK CoLab, your studio assistant. How can I help you today with beats, mixing, or booking?",
+        ? "¡Quack! Soy DUCK CoLab local. Puedo orientar sobre beats, mezcla, stems y comentarios por timestamp. Si no estoy seguro, lo diré."
+        : language === "en"
+        ? "Quack! I am DUCK CoLab local. I can guide beats, mixing, stems and timestamp comments. If I am unsure, I will say so."
+        : language === "fr"
+        ? "Coin-coin ! Je suis le CoLab local de DUCK. Je peux guider les beats, le mix, les stems et les commentaires horodatés."
+        : "Quack! Sono il CoLab locale di DUCK. Posso guidare beat, mix, stem e commenti temporizzati.",
     },
   ]);
   const [input, setInput] = useState("");
-  const chatMutation = trpc.duck.aiChat.useMutation();
+  const chatMutation = trpc.duckStudio.aiChat.useMutation();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -51,7 +55,7 @@ export function DuckAIChat({ language = "pt" }: DuckAIChatProps) {
       });
       setMessages([...newMessages, { role: "assistant", content: res.reply }]);
     } catch (e) {
-      setMessages([...newMessages, { role: "assistant", content: "Quack! Ops, tive um pequeno soluço no estúdio. Tente de novo!" }]);
+      setMessages([...newMessages, { role: "assistant", content: language === "pt" ? "Quack! Ops, tive um soluço local no estúdio. Tente de novo." : "Quack! Ocorreu uma falha local no estúdio. Tente novamente." }]);
     }
   };
 
@@ -91,7 +95,7 @@ export function DuckAIChat({ language = "pt" }: DuckAIChatProps) {
                 <h4 className="font-bold text-xs text-white uppercase tracking-wider font-mono flex items-center gap-1.5">
                   DUCK CoLab <span className="w-2 h-2 rounded-full bg-[#00ff66] animate-pulse" />
                 </h4>
-                <p className="text-[10px] font-mono text-[#00ff66]">Assistente de Estúdio & IA</p>
+                <p className="text-[10px] font-mono text-[#00ff66]">CoLab local · sem treinamento alegado</p>
               </div>
             </div>
             <div className="flex items-center gap-1.5">

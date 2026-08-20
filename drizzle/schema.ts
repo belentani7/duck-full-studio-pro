@@ -65,12 +65,14 @@ export type InsertAuditLog = typeof auditLogs.$inferInsert;
 
 export const duckProjects = mysqlTable("duck_projects", {
   id: int("id").autoincrement().primaryKey(),
+  ownerOpenId: varchar("ownerOpenId", { length: 64 }),
   name: varchar("name", { length: 255 }).notNull(),
   artist: varchar("artist", { length: 255 }).notNull(),
   bpm: int("bpm").notNull().default(140),
   key: varchar("key", { length: 50 }).notNull().default("C# Minor"),
   genre: varchar("genre", { length: 100 }).notNull().default("Trap"),
   status: varchar("status", { length: 50 }).notNull().default("Mixagem"),
+  progress: int("progress").notNull().default(50),
   audioUrl: text("audioUrl"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
@@ -83,6 +85,10 @@ export const duckStems = mysqlTable("duck_stems", {
   fileKey: text("fileKey").notNull(),
   fileUrl: text("fileUrl").notNull(),
   fileSize: int("fileSize").notNull().default(0),
+  status: varchar("status", { length: 32 }).notNull().default("enviado"),
+  reviewNote: text("reviewNote"),
+  reviewedAt: timestamp("reviewedAt"),
+  reviewedBy: varchar("reviewedBy", { length: 255 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
@@ -97,6 +103,7 @@ export const duckComments = mysqlTable("duck_comments", {
 
 export const duckAuditLogs = mysqlTable("duck_audit_logs", {
   id: int("id").autoincrement().primaryKey(),
+  ownerOpenId: varchar("ownerOpenId", { length: 64 }),
   action: varchar("action", { length: 255 }).notNull(),
   details: text("details"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),

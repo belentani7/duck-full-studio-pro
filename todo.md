@@ -61,3 +61,40 @@
 - [x] Ejecutar ALTER TABLE en MySQL y resolver ER_BAD_FIELD_ERROR para tracks y projects
 - [x] Verificar pruebas unitarias Vitest exitosas (auth.logout.test.ts y duck.test.ts)
 - [x] Sincronizar todos los cambios al repositorio privado de GitHub
+
+# PETICIONES DEL ARCHIVO ADJUNTO — APLICACIÓN 2026-08-20
+- [x] Auditar y documentar el material adjunto reutilizable sin duplicar ni inventar activos
+- [x] Mejorar el portal de producción con flujo real de subida, consulta y descarga segura de stems mediante S3
+- [x] Ampliar el portal de cliente con revisión de stems, comentarios por timestamp y estados de aprobación persistentes
+- [x] Ampliar CoLab con respuestas locales verificables sobre catálogo, servicios y flujo de producción, manteniendo límites honestos
+- [x] Conectar el catálogo de audio con previews reales disponibles y estados claros cuando no exista master local
+- [x] Revisar y corregir la experiencia visual responsive del workspace y sus estados de carga, vacío y error
+- [x] Validar autenticación, autorización, acceso a proyectos y exposición de URLs de archivos
+- [x] Añadir pruebas específicas del flujo proyecto → stem → comentario → aprobación y verificar TypeScript/Vitest
+- [x] Actualizar REALITY_CHECK.md y SUPREME_AUDIT.md con evidencias de las peticiones aplicadas
+- [x] Guardar checkpoint final y sincronizar la versión actualizada con el repositorio privado de GitHub
+
+# PETICIONES NO EJECUTABLES COMO PROMESA AUTOMÁTICA
+- [x] Revisar y posponer integraciones externas de WhatsApp, email o pagos hasta contar con credenciales y consentimiento explícito
+- [x] Evaluar y limitar la investigación online e importación adicional de activos a fuentes autorizadas y licencias verificables
+- [x] Mantener fuera del producto clones o copias de plugins comerciales; incluir solo enlaces, metadatos y herramientas legales verificables
+
+# HISTORIAL DE VALIDACIÓN
+- [x] Archivo adjunto leído completamente como texto y convertido en alcance accionable
+- [x] Se conservaron las afirmaciones honestas: no se trataron previews compartidos, chat local ni catálogo legal como masters, IA entrenada o plugins comerciales reales
+
+# PENDIENTE DE IMPLEMENTACIÓN — DETALLE TÉCNICO
+- [x] Sustituir fallbacks estáticos en duckStudioRouters.ts por consultas persistentes o estados vacíos honestos
+- [x] Añadir flujo UI real para crear proyecto, seleccionar proyecto, subir stem y comentar en timestamp
+- [x] Añadir flujo UI real de aprobación/rechazo de stems y persistirlo
+- [x] Añadir prueba de contrato para los procedimientos duckStudio de proyectos, stems y comentarios
+- [x] Verificar en navegador desktop y móvil la pantalla de workspace y sus estados
+- [ ] Comprobar git status, tests, build y sincronización del repositorio privado antes del checkpoint
+
+> Nota: Las tareas de integración externa requieren credenciales del usuario y consentimiento para no prometer conexiones que todavía no existen.
+
+# GAPS IDENTIFICADAS POR LA REVISIÓN FINAL
+- [x] Añadir control de acceso por proyecto mediante propietario antes de exponer stems a terceros; el token de portal externo queda pospuesto
+- [x] Asegurar que las URLs firmadas de stems solo se generen tras validar el acceso al proyecto
+- [x] Añadir una prueba reproducible de los estados responsive del workspace y su navegación móvil
+- [x] Ejecutar una verificación final con todos los tests, build y estado de GitHub antes del checkpoint
