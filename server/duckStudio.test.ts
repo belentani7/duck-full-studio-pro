@@ -32,7 +32,7 @@ function createQuery() {
       return query;
     },
     limit(limit: number) {
-      return Promise.resolve(rows.slice(0, limit));
+      return Promise.resolve(rows.slice(-limit));
     },
     then(resolve: (value: any[]) => unknown, reject?: (reason: unknown) => unknown) {
       return Promise.resolve(rows).then(resolve, reject);
@@ -50,6 +50,7 @@ const fakeDb: any = {
       for (const entry of values) {
         target.push({ ...entry, id: target.length + 1, createdAt: new Date(), updatedAt: new Date() });
       }
+      return [{ insertId: target.length }, []];
     },
   }),
   update: (table: unknown) => ({

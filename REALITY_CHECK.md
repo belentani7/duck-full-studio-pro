@@ -7,7 +7,8 @@ Este ledger mantiene una distinción estricta entre lo que el producto ejecuta d
 | Área | Evidencia | Estado |
 |---|---|---|
 | Autenticación | `server/routers.ts`, `server/_core/oauth.ts`, `client/src/const.ts` y pruebas de logout | Real |
-| Proyectos | `duckStudio.getProjects` y `duckStudio.createProject` consultan y escriben `duck_projects` mediante Drizzle/MySQL | Real |
+| Arquitectura | `server/duckStudio/` separa validación, autorización, almacenamiento, catálogo y CoLab; `duckStudioRouters.ts` conserva el adaptador tRPC | Real |
+| Proyectos | `duckStudio.getProjects` y `duckStudio.createProject` consultan y escriben `duck_projects` mediante Drizzle/MySQL e índice por propietario/fecha | Real |
 | Portal de clientes | `duckStudio.getClients` deriva sus datos de `duck_projects`; no usa clientes inventados en memoria | Real, con alcance interno |
 | Stems | `uploadStem` valida formato y tamaño, sube bytes mediante `storagePut`, registra metadatos y devuelve acceso derivado | Real |
 | Descarga | `getStems` utiliza `storageGet` y trata de generar `storageGetSignedUrl`; no devuelve la clave S3 cruda a la interfaz | Real, con fallback de proxy |
@@ -16,7 +17,8 @@ Este ledger mantiene una distinción estricta entre lo que el producto ejecuta d
 | Auditoría | Creación de proyecto, upload, cambio de estado y comentario escriben `duck_audit_logs` | Real |
 | CoLab | `duckStudio.aiChat` responde por reglas locales en cinco idiomas y declara `mode: local-rule-based` | Real como asistente local; no es un LLM |
 | Interfaz | `DuckFullStudioPro.tsx` contiene formularios, estados de carga/vacío/error, preview de audio, aprobación y comentarios | Real |
-| Pruebas | `server/duckStudio.test.ts`, `server/duck.test.ts` y `server/auth.logout.test.ts` | 3 archivos, 6 tests aprobados |
+| Rendimiento | Las rutas públicas secundarias se cargan con `React.lazy`; el workspace principal permanece disponible en la entrada inicial | Real, con advertencia de bundle pendiente |
+| Pruebas | Integración del router, validación, servicios extraídos, autenticación y contrato responsive | 6 archivos, 16 tests aprobados |
 
 ## Límites conocidos y no promesas
 
@@ -29,6 +31,8 @@ La integración con WhatsApp, email, pagos o servicios externos no se considera 
 Los archivos de audio necesitan que el almacenamiento del entorno esté disponible. El portal muestra un enlace derivado o firmado; si la firma no está disponible, conserva el proxy de almacenamiento como fallback operativo sin exponer la clave interna.
 
 La autorización privada ahora restringe proyectos, stems, comentarios, auditoría y generación de URLs firmadas mediante `ownerOpenId`. Aún no existe identidad externa de cliente, expiración ni revocación de tokens para publicar un portal fuera del workspace; esa ampliación queda explícitamente fuera de esta entrega.
+
+El build de producción continúa informando chunks grandes de dependencias de edición y visualización. A carga diferida de rotas reduz o custo inicial das rotas secundárias, mas não permite afirmar métricas Core Web Vitals, Lighthouse acima de 90 ou bundle menor que 200 KB sem medição dedicada e novas mudanças de dependências.
 
 ## Criterio de entrega
 

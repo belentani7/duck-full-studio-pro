@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, float, json } from "drizzle-orm/mysql-core";
+import { float, index, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 export const users = mysqlTable("users", {
   id: int("id").autoincrement().primaryKey(),
@@ -76,7 +76,7 @@ export const duckProjects = mysqlTable("duck_projects", {
   audioUrl: text("audioUrl"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
-});
+}, table => [index("duck_projects_owner_created_idx").on(table.ownerOpenId, table.createdAt)]);
 
 export const duckStems = mysqlTable("duck_stems", {
   id: int("id").autoincrement().primaryKey(),
@@ -90,7 +90,7 @@ export const duckStems = mysqlTable("duck_stems", {
   reviewedAt: timestamp("reviewedAt"),
   reviewedBy: varchar("reviewedBy", { length: 255 }),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
+}, table => [index("duck_stems_project_created_idx").on(table.projectId, table.createdAt)]);
 
 export const duckComments = mysqlTable("duck_comments", {
   id: int("id").autoincrement().primaryKey(),
@@ -99,7 +99,7 @@ export const duckComments = mysqlTable("duck_comments", {
   content: text("content").notNull(),
   timestampSeconds: float("timestampSeconds").notNull().default(0),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
+}, table => [index("duck_comments_project_created_idx").on(table.projectId, table.createdAt)]);
 
 export const duckAuditLogs = mysqlTable("duck_audit_logs", {
   id: int("id").autoincrement().primaryKey(),
@@ -107,4 +107,4 @@ export const duckAuditLogs = mysqlTable("duck_audit_logs", {
   action: varchar("action", { length: 255 }).notNull(),
   details: text("details"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
-});
+}, table => [index("duck_audit_owner_created_idx").on(table.ownerOpenId, table.createdAt)]);

@@ -1,32 +1,34 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
+import { lazy, Suspense } from "react";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
-import Home from "./pages/Home";
-import DuckOriginalHTML from "./pages/DuckOriginalHTML";
-import DuckMegaHTML from "./pages/DuckMegaHTML";
-import DuckStudioModern from "./pages/DuckStudioModern";
-import DuckFullStudioWorkspace from "./pages/DuckFullStudioWorkspace";
 import DuckFullStudioPro from "./pages/DuckFullStudioPro";
-import DuckAuditStudio from "./pages/DuckAuditStudio";
+
+const Home = lazy(() => import("./pages/Home"));
+const DuckOriginalHTML = lazy(() => import("./pages/DuckOriginalHTML"));
+const DuckMegaHTML = lazy(() => import("./pages/DuckMegaHTML"));
+const DuckStudioModern = lazy(() => import("./pages/DuckStudioModern"));
+const DuckFullStudioWorkspace = lazy(() => import("./pages/DuckFullStudioWorkspace"));
+const DuckAuditStudio = lazy(() => import("./pages/DuckAuditStudio"));
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
-    <Switch>
-      <Route path={"/"} component={DuckFullStudioPro} />
-      <Route path={"/workspace"} component={DuckFullStudioWorkspace} />
-      <Route path={"/public"} component={DuckStudioModern} />
-      <Route path={"/mega"} component={DuckMegaHTML} />
-      <Route path={"/original"} component={DuckOriginalHTML} />
-      <Route path={"/audit"} component={DuckAuditStudio} />
-      <Route path={"/react"} component={Home} />
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
-      <Route component={NotFound} />
-    </Switch>
+    <Suspense fallback={<main className="min-h-screen bg-[#050805] text-[#00ff66] flex items-center justify-center font-mono text-sm">Carregando módulo DUCK…</main>}>
+      <Switch>
+        <Route path={"/"} component={DuckFullStudioPro} />
+        <Route path={"/workspace"} component={DuckFullStudioWorkspace} />
+        <Route path={"/public"} component={DuckStudioModern} />
+        <Route path={"/mega"} component={DuckMegaHTML} />
+        <Route path={"/original"} component={DuckOriginalHTML} />
+        <Route path={"/audit"} component={DuckAuditStudio} />
+        <Route path={"/react"} component={Home} />
+        <Route path={"/404"} component={NotFound} />
+        <Route component={NotFound} />
+      </Switch>
+    </Suspense>
   );
 }
 

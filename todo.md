@@ -89,7 +89,7 @@
 - [x] Añadir flujo UI real de aprobación/rechazo de stems y persistirlo
 - [x] Añadir prueba de contrato para los procedimientos duckStudio de proyectos, stems y comentarios
 - [x] Verificar en navegador desktop y móvil la pantalla de workspace y sus estados
-- [ ] Comprobar git status, tests, build y sincronización del repositorio privado antes del checkpoint
+- [x] Comprobar git status, tests, build y sincronización del repositorio privado antes del checkpoint
 
 > Nota: Las tareas de integración externa requieren credenciales del usuario y consentimiento para no prometer conexiones que todavía no existen.
 
@@ -98,3 +98,24 @@
 - [x] Asegurar que las URLs firmadas de stems solo se generen tras validar el acceso al proyecto
 - [x] Añadir una prueba reproducible de los estados responsive del workspace y su navegación móvil
 - [x] Ejecutar una verificación final con todos los tests, build y estado de GitHub antes del checkpoint
+
+# PETICIONES ARQUITECTÓNICAS DEL ARCHIVO ADJUNTO — APLICACIÓN 2026-08-22
+- [x] Crear un paquete de entrega portable con PROJECT-BRIEF.md, PLAN.md, DECISIONS.md y HANDOFF.md adaptado al estudio DUCK
+- [x] Documentar arquitectura, modelo de dominio, mapa de datos y contrato tRPC con diagramas Mermaid y límites honestos
+- [x] Separar el router monolítico de DUCK Studio en módulos de aplicación, dominio e infraestructura sin alterar los contratos tRPC
+- [x] Extraer validaciones Zod y reglas de autorización de proyecto a módulos reutilizables y cubiertos por pruebas
+- [x] Aplicar carga diferida de rutas no esenciales del portfolio para reducir la carga inicial del workspace
+- [x] Añadir índices no destructivos para consultas frecuentes por propietario, proyecto y fecha en la base de datos
+- [x] Añadir cobertura de pruebas para validaciones, aislamiento por propietario y contratos de servicios extraídos
+- [x] Actualizar README, REALITY_CHECK y SUPREME_AUDIT con el alcance real de esta arquitectura y sus límites operativos
+- [x] Verificar TypeScript, Vitest, build de producción, responsividad y estado del repositorio antes del checkpoint
+
+# COBERTURA DIRECTA DE SERVICIOS EXTRAÍDOS
+- [x] Añadir pruebas unitarias directas de catálogo, CoLab, acceso y adaptación segura de stems
+
+# CIERRE DE SINCRONIZACIÓN ARQUITECTÓNICA
+- [ ] Guardar checkpoint, confirmar el commit y sincronizar la refactorización con el repositorio privado de GitHub
+
+# PETICIONES EVALUADAS Y DELIBERADAMENTE FUERA DEL ALCANCE DEL ESTUDIO DUCK
+- [x] No implementar módulos industriales, PLC/IoT, cadena de suministro, gemelo físico, modelos ML entrenados, microservicios, Kubernetes ni Docker: no corresponden al producto de gestión musical ni son compatibles con su despliegue administrado actual
+- [x] No prometer SSR, 99.99% SLA, WCAG AAA, cobertura superior al 90%, LLM entrenado, pagos, WhatsApp, correo, RPA o agentes autónomos sin requisitos, datos, credenciales, presupuesto y validación específica
